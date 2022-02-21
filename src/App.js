@@ -18,19 +18,36 @@ const app = new Clarifai.App({
 class App extends Component {
   constructor() {
     super();
+    console.log("user: ", JSON.parse(window.sessionStorage.getItem('user')))
+    console.log("if sign in: ", window.sessionStorage.getItem('ifSignedIn'))
+    console.log("Route: ", window.sessionStorage.getItem('route'))
     this.state = {
       input: '',
       imageUrl: '',
       box: {},
-      route: 'signin',
-      ifSignedIn: false,
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ''
-      }
+      route: window.sessionStorage.getItem('route') !== null
+        ? window.sessionStorage.getItem('route')
+        : 'signin',
+      ifSignedIn: window.sessionStorage.getItem('ifSignedIn') !== null
+        ? window.sessionStorage.getItem('ifSignedIn')
+        : false,
+      user:
+        window.sessionStorage.getItem('user') !== null
+          ? {
+            id: JSON.parse(window.sessionStorage.getItem('user')).id,
+            name: JSON.parse(window.sessionStorage.getItem('user')).name,
+            email: JSON.parse(window.sessionStorage.getItem('user')).email,
+            entries: JSON.parse(window.sessionStorage.getItem('user')).entries,
+            joined: JSON.parse(window.sessionStorage.getItem('user')).joined
+          }
+          : {
+            id: '',
+            name: '',
+            email: '',
+            entries: 0,
+            joined: ''
+          },
+
     }
   }
 
@@ -45,13 +62,22 @@ class App extends Component {
       }
     })
 
+    window.sessionStorage.setItem('route', 'home')
+    window.sessionStorage.setItem('ifSignedIn', true)
+    window.sessionStorage.setItem('user', JSON.stringify(data))
+    console.log(JSON.stringify(window.sessionStorage.getItem('user')))
 
   }
 
   componentDidMount() {
     fetch('http://localhost:3000')
       .then(response => response.json())
-      .then(console.log)
+      .then(console.log(window.sessionStorage.getItem('user')))
+      .then(
+        this.state.user.id !== ''
+          ? this.setState({entries: JSON.parse(window.sessionStorage.getItem('user')).entries})
+          :null
+      )
   }
 
   onInputChange = (event) => {
@@ -96,6 +122,7 @@ class App extends Component {
             .then(response => response.json())
             .then(count => {
               this.setState(Object.assign(this.state.user, { entries: count }));
+              window.sessionStorage.setItem('user', JSON.stringify(this.state.user))
             })
         }
 

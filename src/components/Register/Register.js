@@ -23,23 +23,28 @@ class Register extends React.Component {
     }
 
     onSubmitSignIn = () => {
-        //hasta aca quede
-        fetch('http://localhost:3000/register', {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: this.state.email,
-                password: this.state.password,
-                name: this.state.name
+        this.state.email !== '' && this.state.password !== '' && this.state.name !== ''
+            ?
+            fetch('http://localhost:3000/register', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: this.state.email,
+                    password: this.state.password,
+                    name: this.state.name
+                })
             })
-        })
-            .then(response => response.json())
+                .then(response => response.json())
                 .then(user => {
                     if (user) {
                         this.props.loadUser(user);
                         this.props.onRouteChange('home');
                     }
+                    else {
+                        alert("A ocurrido un error al momento de crear la cuenta.")
+                    }
                 })
+            : alert("Debe completar los campos")
 
     }
 

@@ -2,7 +2,6 @@ import React from 'react'
 
 class Signin extends React.Component {
 
-
     constructor(props) {
         super();
         this.state = {
@@ -34,6 +33,10 @@ class Signin extends React.Component {
                     if (user.id) {
                         this.props.loadUser(user);
                         this.props.onRouteChange('home');
+                    }
+                    else{
+                        alert("Credenciales incorrectas.")
+
                     }
                 })
 
