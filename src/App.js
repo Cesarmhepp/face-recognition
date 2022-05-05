@@ -18,27 +18,27 @@ const app = new Clarifai.App({
 class App extends Component {
   constructor() {
     super();
-    console.log("user: ", JSON.parse(window.sessionStorage.getItem('user')))
-    console.log("if sign in: ", window.sessionStorage.getItem('ifSignedIn'))
-    console.log("Route: ", window.sessionStorage.getItem('route'))
+    console.log("user: ", JSON.parse(window.localStorage.getItem('user')))
+    console.log("if sign in: ", window.localStorage.getItem('ifSignedIn'))
+    console.log("Route: ", window.localStorage.getItem('route'))
     this.state = {
       input: '',
       imageUrl: '',
       box: {},
-      route: window.sessionStorage.getItem('route') !== null
-        ? window.sessionStorage.getItem('route')
+      route: window.localStorage.getItem('route') !== null
+        ? window.localStorage.getItem('route')
         : 'signin',
-      ifSignedIn: window.sessionStorage.getItem('ifSignedIn') !== null
-        ? window.sessionStorage.getItem('ifSignedIn')
+      ifSignedIn: window.localStorage.getItem('ifSignedIn') !== null
+        ? window.localStorage.getItem('ifSignedIn')
         : false,
       user:
-        window.sessionStorage.getItem('user') !== null
+        window.localStorage.getItem('user') !== null
           ? {
-            id: JSON.parse(window.sessionStorage.getItem('user')).id,
-            name: JSON.parse(window.sessionStorage.getItem('user')).name,
-            email: JSON.parse(window.sessionStorage.getItem('user')).email,
-            entries: JSON.parse(window.sessionStorage.getItem('user')).entries,
-            joined: JSON.parse(window.sessionStorage.getItem('user')).joined
+            id: JSON.parse(window.localStorage.getItem('user')).id,
+            name: JSON.parse(window.localStorage.getItem('user')).name,
+            email: JSON.parse(window.localStorage.getItem('user')).email,
+            entries: JSON.parse(window.localStorage.getItem('user')).entries,
+            joined: JSON.parse(window.localStorage.getItem('user')).joined
           }
           : {
             id: '',
@@ -62,20 +62,20 @@ class App extends Component {
       }
     })
 
-    window.sessionStorage.setItem('route', 'home')
-    window.sessionStorage.setItem('ifSignedIn', true)
-    window.sessionStorage.setItem('user', JSON.stringify(data))
-    console.log(JSON.stringify(window.sessionStorage.getItem('user')))
+    window.localStorage.setItem('route', 'home')
+    window.localStorage.setItem('ifSignedIn', true)
+    window.localStorage.setItem('user', JSON.stringify(data))
+    console.log(JSON.stringify(window.localStorage.getItem('user')))
 
   }
 
   componentDidMount() {
     fetch('http://localhost:3000')
       .then(response => response.json())
-      .then(console.log(window.sessionStorage.getItem('user')))
+      .then(console.log(window.localStorage.getItem('user')))
       .then(
         this.state.user.id !== ''
-          ? this.setState({entries: JSON.parse(window.sessionStorage.getItem('user')).entries})
+          ? this.setState({entries: JSON.parse(window.localStorage.getItem('user')).entries})
           :null
       )
   }
@@ -122,7 +122,7 @@ class App extends Component {
             .then(response => response.json())
             .then(count => {
               this.setState(Object.assign(this.state.user, { entries: count }));
-              window.sessionStorage.setItem('user', JSON.stringify(this.state.user))
+              window.localStorage.setItem('user', JSON.stringify(this.state.user))
             })
         }
 
